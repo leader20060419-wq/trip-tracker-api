@@ -45,7 +45,7 @@ class TripControllerTest {
                 .andExpect(jsonPath("$.destination").value("Tokyo"));
     }
 
-    @Test
+        @Test
     void post_returns400_whenDestinationIsBlank() throws Exception {
         String body = """
                 {"destination":"","startDate":"2027-06-01","endDate":"2027-06-10","budget":1000}
@@ -54,6 +54,16 @@ class TripControllerTest {
         mockMvc.perform(post("/api/trips").contentType(MediaType.APPLICATION_JSON).content(body))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.fieldErrors.destination").exists());
+    }
+        @Test
+    void post_returns400_whenBudgetIsNegative() throws Exception {
+        String body = """
+                {"destination":"Tokyo","startDate":"2027-06-01","endDate":"2027-06-10","budget":-50}
+                """;
+
+        mockMvc.perform(post("/api/trips").contentType(MediaType.APPLICATION_JSON).content(body))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.fieldErrors.budget").exists());
     }
 
     @Test
