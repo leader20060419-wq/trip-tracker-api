@@ -95,4 +95,18 @@ class TripServiceTest {
         assertEquals(0, BigDecimal.ZERO.compareTo(summary.totalBookingCost()));
         assertEquals(0, new BigDecimal("1000").compareTo(summary.remainingBudget()));
     }
+        @Test
+    void delete_removesBookingsAndTheTrip() {
+        Trip trip = sampleTrip();
+        trip.setId(1L);
+        List<Booking> bookings = List.of(
+                new Booking(BookingType.FLIGHT, "Delta", new BigDecimal("300")));
+        when(tripRepository.findById(1L)).thenReturn(Optional.of(trip));
+        when(bookingRepository.findByTripId(1L)).thenReturn(bookings);
+
+        tripService.delete(1L);
+
+        // TODO 1: verify that bookingRepository.deleteAll was called with bookings
+        // TODO 2: verify that tripRepository.delete was called with trip
+    }
 }
